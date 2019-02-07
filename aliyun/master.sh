@@ -1,3 +1,5 @@
+#!/bin/bash
+
 HOSTS=($1)
 NAMES=(master0 master1 master2)
 
@@ -20,9 +22,9 @@ for i in "${!HOSTS[@]}"; do
 	ssh ${NAMES[$i]} "echo ${HOSTS[$j]}  ${API_SERVER} >> /etc/hosts"
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
-			for j in "${!HOSTS[@]}"; do
-				ssh ${NAMES[$i]} "echo ${HOSTS[$j]}  ${NAMES[$j]} >> /etc/hosts"
-			done
+		for j in "${!HOSTS[@]}"; do
+		ssh ${NAMES[$i]} "echo ${HOSTS[$j]}  ${NAMES[$j]} >> /etc/hosts"
+		done
 	fi
 done
 
@@ -65,6 +67,7 @@ docker tag registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-contro
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0
 
 mkdir -p images
+
 for imageName in $(docker images | awk 'NR!=1{print $1}') ; do
 	docker save $imageName  -o "images/${imageName##*/}.tar";
 done
@@ -72,8 +75,8 @@ done
 for i in "${!HOSTS[@]}"; do
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
-			scp -r images ${NAMES[$i]}:
-			ssh ${NAMES[$i]} 'cd images && for imageName in $(ls); do  docker load < $imageName; done'
+		scp -r images ${NAMES[$i]}:
+		ssh ${NAMES[$i]} 'cd images && for imageName in $(ls); do  docker load < $imageName; done'
 	fi
 done
 
@@ -110,16 +113,16 @@ sleep 60
 for i in "${!NAMES[@]}"; do
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
-			ssh ${NAMES[$i]} "mkdir -p /etc/kubernetes/pki/etcd"
-			scp /etc/kubernetes/pki/ca.crt ${NAMES[$i]}:/etc/kubernetes/pki/
-			scp /etc/kubernetes/pki/ca.key ${NAMES[$i]}:/etc/kubernetes/pki/
-			scp /etc/kubernetes/pki/sa.key ${NAMES[$i]}:/etc/kubernetes/pki/
-			scp /etc/kubernetes/pki/sa.pub ${NAMES[$i]}:/etc/kubernetes/pki/
-			scp /etc/kubernetes/pki/front-proxy-ca.crt ${NAMES[$i]}:/etc/kubernetes/pki/
-			scp /etc/kubernetes/pki/front-proxy-ca.key ${NAMES[$i]}:/etc/kubernetes/pki/
-			scp /etc/kubernetes/pki/etcd/ca.crt ${NAMES[$i]}:/etc/kubernetes/pki/etcd/
-			scp /etc/kubernetes/pki/etcd/ca.key ${NAMES[$i]}:/etc/kubernetes/pki/etcd/
-			scp /etc/kubernetes/admin.conf ${NAMES[$i]}:/etc/kubernetes/
+		ssh ${NAMES[$i]} "mkdir -p /etc/kubernetes/pki/etcd"
+		scp /etc/kubernetes/pki/ca.crt ${NAMES[$i]}:/etc/kubernetes/pki/
+		scp /etc/kubernetes/pki/ca.key ${NAMES[$i]}:/etc/kubernetes/pki/
+		scp /etc/kubernetes/pki/sa.key ${NAMES[$i]}:/etc/kubernetes/pki/
+		scp /etc/kubernetes/pki/sa.pub ${NAMES[$i]}:/etc/kubernetes/pki/
+		scp /etc/kubernetes/pki/front-proxy-ca.crt ${NAMES[$i]}:/etc/kubernetes/pki/
+		scp /etc/kubernetes/pki/front-proxy-ca.key ${NAMES[$i]}:/etc/kubernetes/pki/
+		scp /etc/kubernetes/pki/etcd/ca.crt ${NAMES[$i]}:/etc/kubernetes/pki/etcd/
+		scp /etc/kubernetes/pki/etcd/ca.key ${NAMES[$i]}:/etc/kubernetes/pki/etcd/
+		scp /etc/kubernetes/admin.conf ${NAMES[$i]}:/etc/kubernetes/
 	fi
 done
 
@@ -132,9 +135,9 @@ openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's
 for i in "${!NAMES[@]}"; do
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
-			ssh ${NAMES[$i]} "kubeadm join ${API_SERVER}:6443 \
-			--token ${MASTER_TOKEN} --discovery-token-ca-cert-hash \
-			sha256:${DISCOVERY_TOKEN} --experimental-control-plane"
-			sleep 5
+		ssh ${NAMES[$i]} "kubeadm join ${API_SERVER}:6443 \
+		--token ${MASTER_TOKEN} --discovery-token-ca-cert-hash \
+		sha256:${DISCOVERY_TOKEN} --experimental-control-plane"
+		sleep 5
 	fi
 done
