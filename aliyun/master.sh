@@ -1,5 +1,3 @@
-#!/bin/bash
-
 HOSTS=(${IPS})
 NAMES=(master0 master1 master2)
 
