@@ -10,6 +10,7 @@ DISCOVERY_TOKEN=$5
 hostnamectl set-hostname ${HOST_NAME}
 #设置hosts
 echo "127.0.0.1  ${HOST_NAME}" >> /etc/hosts
+echo "${API_IP}  ${API_SERVER}" >> /etc/hosts
 #安装必要软件
 yum install -y epel-release  net-tools wget vim \
 		ntpdate bash-completion lrzsz unzip bridge-utils.x86_64
