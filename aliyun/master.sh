@@ -1,18 +1,8 @@
 #!/bin/bash
 
-export HOST0=172.17.220.38
-export NAME0=master0
 
-export HOST1=172.17.220.39
-export NAME1=master1
-
-export HOST2=172.17.220.40
-export NAME2=master2
-
-export LOAD_BALANCER_DNS=apiserver.hc68.cn
-
-HOSTS=(${HOST0} ${HOST1} ${HOST2})
-NAMES=(${NAME0} ${NAME1} ${NAME2})
+HOSTS=(${IPS})
+NAMES=(master0 master1 master2)
 
 rm -rf /etc/kubernetes
 
@@ -30,7 +20,7 @@ done
 #配置hosts
 for i in "${!HOSTS[@]}"; do
 	ssh ${NAMES[$i]} "hostnamectl set-hostname ${NAMES[$i]}"
-	ssh ${NAMES[$i]} "echo ${HOSTS[$j]}  ${LOAD_BALANCER_DNS} >> /etc/hosts"
+	ssh ${NAMES[$i]} "echo ${HOSTS[$j]}  ${API_SERVER} >> /etc/hosts"
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
 			for j in "${!HOSTS[@]}"; do
@@ -95,17 +85,17 @@ kind: ClusterConfiguration
 kubernetesVersion: v1.13.1
 apiServer:
   certSANs:
-  - ${LOAD_BALANCER_DNS}
-  - ${HOST0}
-  - ${HOST1}
-  - ${HOST2}
-  - ${NAME0}
-  - ${NAME1}
-  - ${NAME2}
+  - ${API_SERVER}
+  - ${HOSTS[0]}
+  - ${HOSTS[1]}
+  - ${HOSTS[2]}
+  - ${NAMES[0]}
+  - ${NAMES[1]}
+  - ${NAMES[2]}
 networking:
   podSubnet: 10.244.0.0/16
   serviceSubnet: 10.96.0.0/12
-controlPlaneEndpoint: ${LOAD_BALANCER_DNS}:6443
+controlPlaneEndpoint: ${API_SERVER}:6443
 EOF
 
 #初始化master
@@ -143,7 +133,7 @@ openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's
 for i in "${!NAMES[@]}"; do
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
-			ssh ${NAMES[$i]} "kubeadm join ${LOAD_BALANCER_DNS}:6443 \
+			ssh ${NAMES[$i]} "kubeadm join ${API_SERVER}:6443 \
 			--token ${MASTER_TOKEN} --discovery-token-ca-cert-hash \
 			sha256:${DISCOVERY_TOKEN} --experimental-control-plane"
 			sleep 5
