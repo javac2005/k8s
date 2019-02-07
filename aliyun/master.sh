@@ -35,6 +35,8 @@ for i in "${!HOSTS[@]}"; do
 done
 
 #初始化前准备
+wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/pre.sh
+wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/kube-flannel.yml
 chmod +x pre.sh
 for i in "${!HOSTS[@]}"; do
 	scp pre.sh ${NAMES[$i]}:
