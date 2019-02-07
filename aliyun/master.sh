@@ -1,6 +1,7 @@
 #!/bin/bash
 
 HOSTS=($1)
+API_SERVER=$2
 NAMES=(master0 master1 master2)
 
 rm -rf /etc/kubernetes
