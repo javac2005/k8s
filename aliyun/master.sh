@@ -20,7 +20,7 @@ done
 #配置hosts
 for i in "${!HOSTS[@]}"; do
 	ssh ${NAMES[$i]} "hostnamectl set-hostname ${NAMES[$i]}"
-	ssh ${NAMES[$i]} "echo ${HOSTS[$j]}  ${API_SERVER} >> /etc/hosts"
+	ssh ${NAMES[$i]} "echo ${HOSTS[0]}  ${API_SERVER} >> /etc/hosts"
 	if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
 		then
 		for j in "${!HOSTS[@]}"; do
