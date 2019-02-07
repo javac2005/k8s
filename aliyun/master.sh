@@ -1,4 +1,4 @@
-HOSTS=(${IPS})
+HOSTS=($1)
 NAMES=(master0 master1 master2)
 
 rm -rf /etc/kubernetes
