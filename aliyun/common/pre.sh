@@ -44,15 +44,15 @@ yum install -y yum-utils device-mapper-persistent-data lvm2
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 yum makecache fast
 sudo yum install -y --setopt=obsoletes=0 \
-	docker-ce-selinux-17.03.2.ce-1.el7.centos \
-	docker-ce-17.03.2.ce-1.el7.centos
+    docker-ce-selinux-17.03.2.ce-1.el7.centos \
+    docker-ce-17.03.2.ce-1.el7.centos
 systemctl enable docker.service
 systemctl start docker.service
 
 echo '############安装kubeadm、kubectl、kubelet，1.13.1版本'
 yum install -y kubelet-1.13.1 \
-	kubeadm-1.13.1 \ 
-	kubectl-1.13.1  --disableexcludes=kubernetes
+    kubeadm-1.13.1 \ 
+    kubectl-1.13.1  --disableexcludes=kubernetes
 systemctl daemon-reload
 systemctl enable kubelet
 systemctl start kubelet
