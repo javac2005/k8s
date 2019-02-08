@@ -22,7 +22,7 @@ while [ -n "$1" ]
 		esac
 done
 
-if [[ -z $API_IP || -z $API_SERVER || -z $HOST_NAME || -z $MASTER_TOKEN || -z $ROOT_PASSWORD ]]; then
+if [[ -z $API_IP || -z $API_SERVER || -z $HOST_NAME || -z $MASTER_TOKEN || -z $DISCOVERY_TOKEN ]]; then
 	echo "参数错误，必传："$SHOW_USAGE
 	exit 0
 fi
