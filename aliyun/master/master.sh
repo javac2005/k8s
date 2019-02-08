@@ -5,7 +5,12 @@ API_SERVER=$2
 ROOT_PASSWORD=$3
 NAMES=(master0 master1 master2)
 
+#准备
 yum -y install expect
+wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/common/auto_ssh.sh
+wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/common/pre.sh
+wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/master/kube-flannel.yml
+chmod +x auto_ssh.sh pre.sh
 
 #配置本机hosts
 for i in "${!HOSTS[@]}"; do
@@ -37,9 +42,6 @@ for i in "${!HOSTS[@]}"; do
 done
 
 #初始化前准备
-wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/pre.sh
-wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/kube-flannel.yml
-chmod +x pre.sh
 for i in "${!HOSTS[@]}"; do
 	scp pre.sh ${NAMES[$i]}:
 	ssh ${NAMES[$i]} ./pre.sh
