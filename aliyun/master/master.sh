@@ -66,10 +66,6 @@ docker pull registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd
 docker tag registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
 
-docker pull registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0
-docker tag registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0 quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
-docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0
-
 mkdir -p images
 
 for imageName in $(docker images | awk 'NR!=1{print $1}') ; do
