@@ -2,9 +2,10 @@
 
 HOSTS=($1)
 API_SERVER=$2
+ROOT_PASSWORD=$3
 NAMES=(master0 master1 master2)
 
-rm -rf /etc/kubernetes
+yum -y install expect
 
 #配置本机hosts
 for i in "${!HOSTS[@]}"; do
@@ -12,9 +13,9 @@ for i in "${!HOSTS[@]}"; do
 done
 
 #生成密钥，做免密登录
-ssh-keygen -t rsa
+ssh-keygen -t rsa -P "" -f /root/.ssh/id_rsa
 for i in "${!HOSTS[@]}"; do
-	ssh-copy-id ${NAMES[$i]}
+	./auto_ssh.sh ${ROOT_PASSWORD} ${NAMES[$i]}
 done
 
 #配置hosts
