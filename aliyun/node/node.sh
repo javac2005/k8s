@@ -16,7 +16,7 @@ while [ -n "$1" ]
 		        -b|--api-server)      API_SERVER=$2; shift 2;;
 		        -h|--host-name)       HOST_NAME=$2; shift 2;;
 		        -m|--master-token)    MASTER_TOKEN=$2; shift 2;;
-		        -t|--discovery-token) ROOT_PASSWORD=$2; shift 2;;
+		        -t|--discovery-token) DISCOVERY_TOKEN=$2; shift 2;;
 		        --) break ;;
 		        *)  echo $1,$2,$SHOW_USAGE; break ;;
 		esac
