@@ -36,7 +36,7 @@ echo "${API_IP}  ${API_SERVER}" >> /etc/hosts
 yum install -y epel-release  net-tools wget vim \
 		ntpdate bash-completion lrzsz unzip bridge-utils.x86_64
 #初始化前准备
-wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/pre.sh
+wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/common/pre.sh
 chmod +x pre.sh
 ./pre.sh
 
