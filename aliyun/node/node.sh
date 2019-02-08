@@ -7,7 +7,7 @@ MASTER_TOKEN=""
 DISCOVERY_TOKEN=""
 
 SHOW_USAGE="-a | --api-ip , -b | --api-server , -h | --host-name , -m | --master-token , -t | --discovery-token"
-GETOPT_ARGS=`getopt -o a:m:r: -al api-server:,master-ips:,root-password: -- "$@"`
+GETOPT_ARGS=`getopt -o a:b:h:m:t -al api-ip:,api-server:,host-name:,master-token:,discovery-token: -- "$@"`
 eval set -- "$GETOPT_ARGS"
 while [ -n "$1" ]
 	do
