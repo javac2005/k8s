@@ -1,8 +1,29 @@
 #!/bin/bash
 
-HOSTS=($1)
-API_SERVER=$2
-ROOT_PASSWORD=$3
+API_SERVER=""
+MASTER_IPS=""
+ROOT_PASSWORD=""
+
+SHOW_USAGE="-a | --api-server , -m | --master-ips , -r | --root-password"
+GETOPT_ARGS=`getopt -o a:m:r: -al api-server:,master-ips:,root-password: -- "$@"`
+eval set -- "$GETOPT_ARGS"
+while [ -n "$1" ]
+	do
+		case "$1" in
+		        -a|--api-server)    API_SERVER=$2; shift 2;;
+		        -m|--master-ips)    MASTER_IPS=$2; shift 2;;
+		        -r|--root-password) ROOT_PASSWORD=$2; shift 2;;
+		        --) break ;;
+		        *)  echo $1,$2,$SHOW_USAGE; break ;;
+		esac
+done
+
+if [[ -z $API_SERVER || -z $MASTER_IPS || -z $ROOT_PASSWORD ]]; then
+	echo "参数错误，必传："$SHOW_USAGE
+	exit 0
+fi
+
+HOSTS=($MASTER_IPS)
 NAMES=(master0 master1 master2)
 
 #准备

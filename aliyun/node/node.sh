@@ -1,10 +1,31 @@
 #!/bin/bash
 
-HOST_NAME=$1
-API_SERVER=$2
-API_IP=$3
-MASTER_TOKEN=$4
-DISCOVERY_TOKEN=$5
+API_IP=""
+API_SERVER=""
+HOST_NAME=""
+MASTER_TOKEN=""
+DISCOVERY_TOKEN=""
+
+SHOW_USAGE="-a | --api-ip , -b | --api-server , -h | --host-name , -m | --master-token , -t | --discovery-token"
+GETOPT_ARGS=`getopt -o a:m:r: -al api-server:,master-ips:,root-password: -- "$@"`
+eval set -- "$GETOPT_ARGS"
+while [ -n "$1" ]
+	do
+		case "$1" in
+		        -a|--api-ip)          API_IP=$2; shift 2;;
+		        -b|--api-server)      API_SERVER=$2; shift 2;;
+		        -h|--host-name)       HOST_NAME=$2; shift 2;;
+		        -m|--master-token)    MASTER_TOKEN=$2; shift 2;;
+		        -t|--discovery-token) ROOT_PASSWORD=$2; shift 2;;
+		        --) break ;;
+		        *)  echo $1,$2,$SHOW_USAGE; break ;;
+		esac
+done
+
+if [[ -z $API_IP || -z $API_SERVER || -z $HOST_NAME || -z $MASTER_TOKEN || -z $ROOT_PASSWORD ]]; then
+	echo "参数错误，必传："$SHOW_USAGE
+	exit 0
+fi
 
 #设置主机名
 hostnamectl set-hostname ${HOST_NAME}
