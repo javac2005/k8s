@@ -58,7 +58,7 @@ done
 
 #安装必要软件
 for i in "${!HOSTS[@]}"; do
-    ssh ${NAMES[$i]} "yum install -y epel-release  net-tools wget vim \
+    ssh ${NAMES[$i]} "yum install -y nfs-utils epel-release  net-tools wget vim \
         ntpdate bash-completion lrzsz unzip bridge-utils.x86_64"
 done
 

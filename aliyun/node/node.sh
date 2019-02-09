@@ -33,7 +33,7 @@ hostnamectl set-hostname ${HOST_NAME}
 echo "127.0.0.1  ${HOST_NAME}" >> /etc/hosts
 echo "${API_IP}  ${API_SERVER}" >> /etc/hosts
 #安装必要软件
-yum install -y epel-release  net-tools wget vim \
+yum install -y nfs-utils epel-release  net-tools wget vim \
 		ntpdate bash-completion lrzsz unzip bridge-utils.x86_64
 #初始化前准备
 wget https://raw.githubusercontent.com/javac2005/k8s/master/aliyun/common/pre.sh
