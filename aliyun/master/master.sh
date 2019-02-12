@@ -128,6 +128,7 @@ docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
     sh -c 'cp /kubeadm /tmp/kubeadm/'
 mv /usr/bin/kubeadm /usr/bin/kubeadm_backup
 mv /tmp/kubeadm/kubeadm /usr/bin/
+chmod +x /usr/bin/kubeadm
 
 #初始化master
 kubeadm init --config=kubeadm-config.yaml
@@ -170,6 +171,7 @@ for i in "${!NAMES[@]}"; do
             sh -c 'cp /kubeadm /tmp/kubeadm/'"
         ssh ${NAMES[$i]} "mv /usr/bin/kubeadm /usr/bin/kubeadm_backup"
         ssh ${NAMES[$i]} "mv /tmp/kubeadm/kubeadm /usr/bin/"
+        ssh ${NAMES[$i]} "chmod +x /usr/bin/kubeadm"
         #加入
         ssh ${NAMES[$i]} "kubeadm join ${API_SERVER}:6443 \
         --token ${MASTER_TOKEN} --discovery-token-ca-cert-hash \
