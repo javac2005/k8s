@@ -86,6 +86,7 @@ done
 docker pull registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
 docker tag registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
+docker pull docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1
 
 mkdir -p images
 
@@ -120,6 +121,13 @@ networking:
   serviceSubnet: 10.96.0.0/12
 controlPlaneEndpoint: ${API_SERVER}:6443
 EOF
+
+#证书有效期10年
+docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
+    registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1 \
+    sh -c 'cp /kubeadm /tmp/kubeadm/'
+mv /usr/bin/kubeadm /usr/bin/kubeadm_backup
+mv /tmp/kubeadm/kubeadm /usr/bin/
 
 #初始化master
 kubeadm init --config=kubeadm-config.yaml
@@ -156,6 +164,13 @@ openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's
 for i in "${!NAMES[@]}"; do
     if [[ ${NAMES[$i]} != ${NAMES[0]} ]]
         then
+        #证书有效期10年
+        ssh ${NAMES[$i]} "docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
+            registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1 \
+            sh -c 'cp /kubeadm /tmp/kubeadm/'"
+        ssh ${NAMES[$i]} "mv /usr/bin/kubeadm /usr/bin/kubeadm_backup"
+        ssh ${NAMES[$i]} "mv /tmp/kubeadm/kubeadm /usr/bin/"
+        #加入
         ssh ${NAMES[$i]} "kubeadm join ${API_SERVER}:6443 \
         --token ${MASTER_TOKEN} --discovery-token-ca-cert-hash \
         sha256:${DISCOVERY_TOKEN} --experimental-control-plane"
