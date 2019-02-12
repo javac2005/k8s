@@ -86,7 +86,7 @@ done
 docker pull registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
 docker tag registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
-docker pull docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1
+docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1
 
 mkdir -p images
 
