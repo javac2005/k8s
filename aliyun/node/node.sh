@@ -60,6 +60,16 @@ docker pull registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-contr
 docker tag registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0 quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0
 
+docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1
+
+#证书有效期10年
+docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
+    registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1 \
+    sh -c 'cp /kubeadm /tmp/kubeadm/'
+mv /usr/bin/kubeadm /usr/bin/kubeadm_backup
+mv /tmp/kubeadm/kubeadm /usr/bin/
+chmod +x /usr/bin/kubeadm
+
 #加入集群
 kubeadm join ${API_SERVER}:6443 \
 	--token ${MASTER_TOKEN} --discovery-token-ca-cert-hash \
