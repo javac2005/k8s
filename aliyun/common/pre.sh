@@ -49,10 +49,10 @@ sudo yum install -y --setopt=obsoletes=0 \
 systemctl enable docker.service
 systemctl start docker.service
 
-echo '############安装kubeadm、kubectl、kubelet，1.13.1版本'
-yum install -y kubelet-1.13.1 \
-    kubeadm-1.13.1 \ 
-    kubectl-1.13.1  --disableexcludes=kubernetes
+echo '############安装kubeadm、kubectl、kubelet，1.13.3版本'
+yum install -y kubelet-1.13.3 \
+    kubeadm-1.13.3 \ 
+    kubectl-1.13.3  --disableexcludes=kubernetes
 systemctl daemon-reload
 systemctl enable kubelet
 systemctl start kubelet

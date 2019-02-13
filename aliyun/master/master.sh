@@ -70,10 +70,10 @@ done
 
 #下载镜像
 for imageName in \
-    kube-proxy:v1.13.1 \
-    kube-apiserver:v1.13.1 \
-    kube-controller-manager:v1.13.1 \
-    kube-scheduler:v1.13.1 \
+    kube-proxy:v1.13.3 \
+    kube-apiserver:v1.13.3 \
+    kube-controller-manager:v1.13.3 \
+    kube-scheduler:v1.13.3 \
     coredns:1.2.6 \
     etcd:3.2.24 \
     pause:3.1; \
@@ -86,7 +86,7 @@ done
 docker pull registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
 docker tag registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64
-docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1
+docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3
 
 mkdir -p images
 
@@ -106,7 +106,7 @@ done
 cat << EOF > kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-kubernetesVersion: v1.13.1
+kubernetesVersion: v1.13.3
 apiServer:
   certSANs:
   - ${API_SERVER}
@@ -124,7 +124,7 @@ EOF
 
 #证书有效期10年
 docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
-    registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1 \
+    registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3 \
     sh -c 'cp /kubeadm /tmp/kubeadm/'
 mv /usr/bin/kubeadm /usr/bin/kubeadm_backup
 mv /tmp/kubeadm/kubeadm /usr/bin/
@@ -167,7 +167,7 @@ for i in "${!NAMES[@]}"; do
         then
         #证书有效期10年
         ssh ${NAMES[$i]} "docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
-            registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1 \
+            registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3 \
             sh -c 'cp /kubeadm /tmp/kubeadm/'"
         ssh ${NAMES[$i]} "mv /usr/bin/kubeadm /usr/bin/kubeadm_backup"
         ssh ${NAMES[$i]} "mv /tmp/kubeadm/kubeadm /usr/bin/"

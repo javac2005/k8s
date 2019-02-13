@@ -42,7 +42,7 @@ chmod +x pre.sh
 
 #下载镜像
 for imageName in \
-	kube-proxy:v1.13.1 \
+	kube-proxy:v1.13.3 \
 	coredns:1.2.6 \
 	pause:3.1 \
 	kubernetes-dashboard-amd64:v1.10.1; \
@@ -60,11 +60,11 @@ docker pull registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-contr
 docker tag registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0 quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
 docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/nginx-ingress-controller:0.21.0
 
-docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1
+docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3
 
 #证书有效期10年
 docker run --rm -v /tmp/kubeadm/:/tmp/kubeadm/ \
-    registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.1 \
+    registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3 \
     sh -c 'cp /kubeadm /tmp/kubeadm/'
 mv /usr/bin/kubeadm /usr/bin/kubeadm_backup
 mv /tmp/kubeadm/kubeadm /usr/bin/
