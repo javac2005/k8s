@@ -58,8 +58,10 @@ chmod +x auto_ssh.sh pre.sh
 
 echo "配置本机hosts"
 for i in "${!MASTERS[@]}"; do
-    echo "${MASTERS[$i]}  ${MASTER_NAMES[$i]}" >> /etc/hosts
-    echo "${NODES[$i]}  ${NODE_NAMES[$i]}" >> /etc/hosts
+	echo "${MASTERS[$i]}  ${MASTER_NAMES[$i]}" >> /etc/hosts
+done
+for i in "${!NODES[@]}"; do
+	echo "${NODES[$i]}  ${NODE_NAMES[$i]}" >> /etc/hosts
 done
 
 echo "生成密钥，做免密登录"
@@ -75,7 +77,7 @@ echo "设置主机名，配置hosts"
 for i in "${!MASTERS[@]}"; do
     ssh ${MASTER_NAMES[$i]} "\
     	hostnamectl set-hostname ${MASTER_NAMES[$i]} &&\
-    	echo ${MASTERS[0]}  ${API_SERVER_DOMAIN} >> /etc/hosts"
+    	echo ${API_SERVER_IP}  ${API_SERVER_DOMAIN} >> /etc/hosts"
     if [[ ${MASTER_NAMES[$i]} != ${MASTER_NAMES[0]} ]]
         then
         for j in "${!MASTERS[@]}"; do
