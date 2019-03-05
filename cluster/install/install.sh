@@ -75,8 +75,9 @@ done
 
 echo "设置主机名，配置hosts"
 for i in "${!MASTERS[@]}"; do
-    ssh ${MASTER_NAMES[$i]} "hostnamectl set-hostname ${MASTER_NAMES[$i]}"
-    ssh ${MASTER_NAMES[$i]} "echo ${MASTERS[0]}  ${API_SERVER_DOMAIN} >> /etc/hosts"
+    ssh ${MASTER_NAMES[$i]} "\
+    	hostnamectl set-hostname ${MASTER_NAMES[$i]} &&\
+    	echo ${MASTERS[0]}  ${API_SERVER_DOMAIN} >> /etc/hosts"
     if [[ ${MASTER_NAMES[$i]} != ${MASTER_NAMES[0]} ]]
         then
         for j in "${!MASTERS[@]}"; do
