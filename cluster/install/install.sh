@@ -158,7 +158,6 @@ done
 for i in "${!MASTERS[@]}"; do
     CERT_SANS=${CERT_SANS},\"${MASTER_NAMES[$i]}\"
 done
-
 CERT_SANS=${CERT_SANS}]
 
 cat << EOF > kubeadm-config.yaml
