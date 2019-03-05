@@ -51,7 +51,7 @@ done
 
 echo "准备环境"
 yum -y install expect
-wget https://raw.githubusercontent.com/javac2005/k8s/cluster/install/common/auto_ssh.sh
+wget https://raw.githubusercontent.com/javac2005/k8s/master/cluster/install/common/auto_ssh.sh
 wget https://raw.githubusercontent.com/javac2005/k8s/cluster/install/common/pre.sh
 wget https://raw.githubusercontent.com/javac2005/k8s/cluster/install/resources/kube-flannel.yml
 chmod +x auto_ssh.sh pre.sh
