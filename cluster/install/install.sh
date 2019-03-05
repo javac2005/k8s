@@ -80,7 +80,7 @@ for i in "${!MASTERS[@]}"; do
     if [[ ${MASTER_NAMES[$i]} != ${MASTER_NAMES[0]} ]]
         then
         for j in "${!MASTERS[@]}"; do
-        ssh ${MASTER_NAMES[$i]} "echo ${MASTERS[$j]}  ${MASTER_NAMES[$j]} >> /etc/hosts"
+        	ssh ${MASTER_NAMES[$i]} "echo ${MASTERS[$j]}  ${MASTER_NAMES[$j]} >> /etc/hosts"
         done
     fi
 done
