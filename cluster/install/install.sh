@@ -185,7 +185,7 @@ chmod +x /usr/bin/kubeadm
 
 echo "初始化master"
 kubeadm init --config=kubeadm-config.yaml
-mkdir -p .kube && rm -rf .kube/config && cp /etc/kubernetes/admin.conf .kube/config
+mkdir -p /root/.kube && rm -rf /root/.kube/config && cp /etc/kubernetes/admin.conf /root/.kube/config
 sysctl net.bridge.bridge-nf-call-iptables=1
 kubectl apply -f kube-flannel.yml
 
