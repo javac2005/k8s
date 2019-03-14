@@ -1,0 +1,17 @@
+[local]
+10.0.0.77
+
+[master]
+10.0.0.79
+
+[node]
+
+[hosts:children]
+local
+master
+node
+
+[hosts:vars]
+ansible_ssh_user="root"
+ansible_ssh_pass="root"
+ansible_ssh_port="22"
