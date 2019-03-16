@@ -15,3 +15,4 @@ node
 ansible_ssh_user="root"
 ansible_ssh_pass="root"
 ansible_ssh_port="22"
+api_server_doman="apiserver.com"
