@@ -92,20 +92,14 @@
     - epel-release
     - net-tools
     - wget
-    - vim
     - ntpdate
     - bash-completion
     - lrzsz
-    - zip
     - unzip
     - bridge-utils.x86_64
     - yum-utils
     - device-mapper-persistent-data
     - lvm2
-    - rsync
-    - telnet
-    - apr
-    - apr-util
   #安装docker-ce-17.03.2
   - name: install docker-ce-17.03.2
     yum: name={{ item }} state=present
@@ -171,8 +165,8 @@
     - 'kind: ClusterConfiguration'
     - 'kubernetesVersion: v1.13.3'
     - 'apiServer:'
-    - '  certSANs: ${CERT_SANS}'
+    - '  certSANs: {{ api_server_doman }}'
     - 'networking:'
     - '  podSubnet: 10.244.0.0/16'
     - '  serviceSubnet: 10.96.0.0/12'
-    - 'controlPlaneEndpoint: ${API_SERVER_DOMAIN}:6443'
+    - 'controlPlaneEndpoint: {{ api_server_doman }}:6443'

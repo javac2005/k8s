@@ -6,12 +6,7 @@
 
 [node]
 
-[hosts:children]
-local
-master
-node
-
-[hosts:vars]
+[all:vars]
 ansible_ssh_user="root"
 ansible_ssh_pass="root"
 ansible_ssh_port="22"
