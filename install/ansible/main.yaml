@@ -1,0 +1,9 @@
+---
+- hosts: all
+  roles:
+  - prepare
+
+- hosts: local
+  connection: local
+  roles:
+  - master
