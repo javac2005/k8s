@@ -1,0 +1,101 @@
+---
+tasks:
+- name: 关闭防火墙
+  shell: "systemctl stop firewalld.service || true &&\
+         systemctl disable firewalld.service || true "
+- name: 禁用selinux
+  selinux: state=disabled
+- name: 加载bridge、br_netfilter模块，添加配置文件
+  shell: modprobe bridge && modprobe br_netfilter
+- name: create modules config
+  file:
+    path: /etc/modules-load.d/k8s.conf
+    state: touch
+- name: write k8s.conf
+  lineinfile:
+    state: present
+    dest: /etc/modules-load.d/k8s.conf
+    line: "{{ item }}"
+  with_items:
+  - "bridge"
+  - "br_netfilter"
+- name: 设置iptables转发规则
+  sysctl:
+    name: "{{ item }}"
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  with_items:
+  - "net.bridge.bridge-nf-call-iptables"
+  - "net.bridge.bridge-nf-call-ip6tables"
+- name: 尽量使用物理内存，不使用虚拟内存
+  sysctl:
+    name: "vm.swappiness"
+    value: 0
+    sysctl_set: yes
+    state: present
+    reload: yes
+- name: 配置源
+  copy:
+    src: kubernetes.repo
+    dest: /etc/yum.repos.d/
+- name: yum-config-manager、yum clean all、yum -y update
+  shell: "yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo &&\ 
+          yum clean all &&\ 
+          yum -y update"
+- name: 安装必要软件
+  yum: name={{ item }} state=present
+  with_items:
+  - nfs-utils
+  - epel-release
+  - net-tools
+  - wget
+  - ntpdate
+  - bash-completion
+  - lrzsz
+  - unzip
+  - bridge-utils.x86_64
+  - yum-utils
+  - device-mapper-persistent-data
+  - lvm2
+- name: 安装docker-ce-17.03.2
+  yum: name={{ item }} state=present
+  with_items:
+  - https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch.rpm
+  - docker-ce-17.03.2.ce-1.el7.centos
+- name: start docker
+  shell: systemctl daemon-reload;systemctl enable docker;systemctl start docker
+- name: 安装k8s
+  yum: name={{ item }} state=present
+  with_items:
+  - kubelet-1.13.3
+  - kubeadm-1.13.3
+  - kubectl-1.13.3
+- name: 启动kubelet
+  shell: systemctl daemon-reload;systemctl enable kubelet;systemctl start kubelet
+- name: 拉取k8s必要镜像
+  shell: "docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/{{ item }} &&\ 
+          docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/{{ item }} k8s.gcr.io/{{ item }} &&\ 
+          docker rmi -f registry.cn-hangzhou.aliyuncs.com/google_containers/{{ item }}"
+  with_items:
+  - kube-proxy:v1.13.3
+  - kube-apiserver:v1.13.3
+  - kube-controller-manager:v1.13.3
+  - kube-scheduler:v1.13.3
+  - coredns:1.2.6
+  - etcd:3.2.24
+  - pause:3.1
+- name: 拉取flannel及证书镜像
+  shell: "docker pull registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 &&\ 
+         docker tag registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64 &&\ 
+         docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 &&\ 
+         docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3"
+- name: 创建flannel配置文件目录
+  file:
+    path: /etc/cni/net.d/
+    state: directory
+- name: 拷贝flannel配置文件
+  copy:
+    src: 10-flannel.conflist
+    dest: /etc/cni/net.d/
