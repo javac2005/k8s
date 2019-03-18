@@ -63,7 +63,7 @@
   with_items:
   - https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch.rpm
   - docker-ce-17.03.2.ce-1.el7.centos
-- name: start docker
+- name: 启动 docker
   shell: systemctl daemon-reload;systemctl enable docker;systemctl start docker
 - name: 安装k8s
   yum: name={{ item }} state=present
