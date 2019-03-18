@@ -1,5 +1,4 @@
 ---
-tasks:
 - name: 关闭防火墙
   shell: "systemctl stop firewalld.service || true &&\
          systemctl disable firewalld.service || true "
