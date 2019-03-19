@@ -1,7 +1,7 @@
 - name: 拷贝kubeadm-config.yaml配置文件
   template:
     src: kubeadm-config.j2
-    dest: kubeadm-config.yaml
+    dest: ./kubeadm-config.yaml
 - name: 初始化第一个master
   shell: kubeadm init --config=kubeadm-config.yaml
 - name: 配置kubectl的执行环境
