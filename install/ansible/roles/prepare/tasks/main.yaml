@@ -3,10 +3,11 @@
   shell: "systemctl stop firewalld.service || true &&\
          systemctl disable firewalld.service || true "
 - name: 禁用selinux
-  selinux: state=disabled
-- name: 加载bridge、br_netfilter模块，添加配置文件
+  shell: "setenforce 0 &&\ 
+          sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config"
+- name: 加载bridge、br_netfilter模块
   shell: modprobe bridge && modprobe br_netfilter
-- name: create modules config
+- name: 配置开机加载bridge、br_netfilter模块
   file:
     path: /etc/modules-load.d/k8s.conf
     state: touch
