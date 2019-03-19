@@ -1,0 +1,9 @@
+- name: 获得token，如果没有token则创建
+  shell: if [[ `kubeadm token list | tail -n +2 | head -n 1` == ""  ]]; then kubeadm token create; fi
+- name: 获得token，赋给master-token变量
+  shell: kubeadm token list | tail -n +2 | head -n 1 | awk '{print $1}'
+  register: master-token
+- name: 获得加入集群的discovery-token-ca-cert-hash并赋值给discovery-token-ca-cert-hash变量
+  shell: "openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+          openssl dgst -sha256 -hex | sed 's/^.* //' "
+  register: discovery-token-ca-cert-hash
