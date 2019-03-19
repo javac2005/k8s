@@ -4,11 +4,9 @@ kubernetesVersion: v1.13.3
 apiServer:
   certSANs:
   - "{{ api_server_doman }}"
-{% for ipaddr in groups.master %}
-  - {{ ipaddr }}
-{% ipaddr %}
+  - "{{ groups.master[0] }}"
 {% for ipaddr in groups.masters %}
-  - {{ ipaddr }}
+  - "{{ ipaddr }}"
 {% ipaddr %}
 networking:
   podSubnet: 10.244.0.0/16

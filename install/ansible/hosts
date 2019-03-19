@@ -10,6 +10,7 @@
 ansible_ssh_user="root"
 ansible_ssh_pass="root"
 ansible_ssh_port="22"
+
 api_server_doman="apiserver.com"
 module_conf="/etc/modules-load.d/k8s.conf"
 ali_repo="registry.cn-beijing.aliyuncs.com/common-registry"

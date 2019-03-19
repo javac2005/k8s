@@ -1,0 +1,4 @@
+---
+- name: masters加入集群
+  shell: "kubeadm join {{ groups.master[0] }}:6443 --token {{ master-token }} \
+          --discovery-token-ca-cert-hash sha256:{{ discovery-token-ca-cert-hash }}"
