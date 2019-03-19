@@ -5,45 +5,28 @@
 - name: 禁用selinux
   shell: "setenforce 0 &&\ 
           sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config"
-- name: 加载bridge、br_netfilter模块
-  shell: modprobe bridge && modprobe br_netfilter
-- name: 配置开机加载bridge、br_netfilter模块
-  file:
-    path: /etc/modules-load.d/k8s.conf
-    state: touch
-- name: write k8s.conf
-  lineinfile:
-    state: present
-    dest: /etc/modules-load.d/k8s.conf
-    line: "{{ item }}"
-  with_items:
-  - "bridge"
-  - "br_netfilter"
+- name: 加载bridge、br_netfilter模块，并设置开机启动
+  shell: "modprobe bridge && modprobe br_netfilter &&\ 
+          touch {{ moduleconf }} && echo 'bridge' > {{ moduleconf }} &&\ 
+          echo 'br_netfilter' >> {{ moduleconf }}"
 - name: 设置iptables转发规则
   sysctl:
-    name: "{{ item }}"
-    value: 1
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
     sysctl_set: yes
     state: present
     reload: yes
   with_items:
-  - "net.bridge.bridge-nf-call-iptables"
-  - "net.bridge.bridge-nf-call-ip6tables"
-- name: 尽量使用物理内存，不使用虚拟内存
-  sysctl:
-    name: "vm.swappiness"
-    value: 0
-    sysctl_set: yes
-    state: present
-    reload: yes
+  - {"name":"net.bridge.bridge-nf-call-iptables", "value":1}
+  - {"name":"net.bridge.bridge-nf-call-ip6tables","value":1}
+  - {"vm.swappiness","value":0}
 - name: 配置源
   copy:
     src: kubernetes.repo
     dest: /etc/yum.repos.d/
-- name: yum-config-manager、yum clean all、yum -y update
+- name: 执行yum-config-manager、yum clean all、yum -y update
   shell: "yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo &&\ 
-          yum clean all &&\ 
-          yum -y update"
+          yum clean all && yum -y update"
 - name: 安装必要软件
   yum: name={{ item }} state=present
   with_items:
@@ -75,9 +58,9 @@
 - name: 启动kubelet
   shell: systemctl daemon-reload;systemctl enable kubelet;systemctl start kubelet
 - name: 拉取k8s必要镜像
-  shell: "docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/{{ item }} &&\ 
-          docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/{{ item }} k8s.gcr.io/{{ item }} &&\ 
-          docker rmi -f registry.cn-hangzhou.aliyuncs.com/google_containers/{{ item }}"
+  shell: "docker pull {{ google_repo }}/{{ item }} &&\ 
+          docker tag {{ google_repo }}/{{ item }} k8s.gcr.io/{{ item }} &&\ 
+          docker rmi -f {{ google_repo }}/{{ item }}"
   with_items:
   - kube-proxy:v1.13.3
   - kube-apiserver:v1.13.3
@@ -87,10 +70,10 @@
   - etcd:3.2.24
   - pause:3.1
 - name: 拉取flannel及证书镜像
-  shell: "docker pull registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 &&\ 
-         docker tag registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64 &&\ 
-         docker rmi -f registry.cn-beijing.aliyuncs.com/common-registry/flannel:v0.10.0-amd64 &&\ 
-         docker pull registry.cn-beijing.aliyuncs.com/common-registry/kubeadm:1.13.3"
+  shell: "docker pull {{ ali_repo }}/flannel:v0.10.0-amd64 &&\ 
+         docker tag {{ ali_repo }}/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64 &&\ 
+         docker rmi -f {{ ali_repo }}/flannel:v0.10.0-amd64 &&\ 
+         docker pull {{ ali_repo }}/kubeadm:1.13.3"
 - name: 创建flannel配置文件目录
   file:
     path: /etc/cni/net.d/
