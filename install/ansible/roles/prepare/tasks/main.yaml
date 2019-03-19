@@ -61,14 +61,7 @@
   shell: "docker pull {{ google_repo }}/{{ item }} &&\ 
           docker tag {{ google_repo }}/{{ item }} k8s.gcr.io/{{ item }} &&\ 
           docker rmi -f {{ google_repo }}/{{ item }}"
-  with_items:
-  - kube-proxy:v1.13.3
-  - kube-apiserver:v1.13.3
-  - kube-controller-manager:v1.13.3
-  - kube-scheduler:v1.13.3
-  - coredns:1.2.6
-  - etcd:3.2.24
-  - pause:3.1
+  with_items: ["kube-proxy:v1.13.3","kube-apiserver:v1.13.3","kube-controller-manager:v1.13.3","kube-scheduler:v1.13.3","coredns:1.2.6","etcd:3.2.24","pause:3.1"]
 - name: 拉取flannel及证书镜像
   shell: "docker pull {{ ali_repo }}/flannel:v0.10.0-amd64 &&\ 
          docker tag {{ ali_repo }}/flannel:v0.10.0-amd64 quay.io/coreos/flannel:v0.10.0-amd64 &&\ 
