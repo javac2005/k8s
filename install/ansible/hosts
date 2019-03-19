@@ -1,16 +1,16 @@
-[local]
+[master]
 10.0.0.77
 
-[master]
+[masters]
 10.0.0.79
 
-[node]
+[nodes]
 
 [all:vars]
 ansible_ssh_user="root"
 ansible_ssh_pass="root"
 ansible_ssh_port="22"
 api_server_doman="apiserver.com"
-moduleconf="/etc/modules-load.d/k8s.conf"
+module_conf="/etc/modules-load.d/k8s.conf"
 ali_repo="registry.cn-beijing.aliyuncs.com/common-registry"
 google_repo="registry.cn-hangzhou.aliyuncs.com/google_containers"

@@ -7,8 +7,8 @@
           sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config"
 - name: 加载bridge、br_netfilter模块，并设置开机启动
   shell: "modprobe bridge && modprobe br_netfilter &&\ 
-          touch {{ moduleconf }} && echo 'bridge' > {{ moduleconf }} &&\ 
-          echo 'br_netfilter' >> {{ moduleconf }}"
+          touch {{ module_conf }} && echo 'bridge' > {{ module_conf }} &&\ 
+          echo 'br_netfilter' >> {{ module_conf }}"
 - name: 设置iptables转发规则
   sysctl:
     name: "{{ item.name }}"
