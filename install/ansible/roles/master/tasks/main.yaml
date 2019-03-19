@@ -8,3 +8,9 @@
   shell: "mkdir -p /root/.kube &&\ 
          rm -rf /root/.kube/config &&\ 
          cp /etc/kubernetes/admin.conf /root/.kube/config"
+- name: 拷贝kube-flannel.yml文件
+  copy:
+    src: kube-flannel.yml
+    dest: .
+- name: 安装flannel网络
+  shell: kubectl apply -f kube-flannel.yml
